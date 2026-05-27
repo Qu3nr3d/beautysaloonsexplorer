@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Edytuj – {{ salon.name }}{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<div class="edit-wrapper">
+  <div class="detail-nav">
+    <a href="/salons/{{ salon.id }}" class="back-link">← Wróć do szczegółów</a>
+  </div>
+
+  <div class="edit-card">
+    <h1 class="edit-title">Edytuj salon</h1>
+    <p class="edit-subtitle">{{ salon.name }}</p>
+
+    <form method="post" action="/salons/{{ salon.id }}/edit" class="edit-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Nazwa *</label>
+          <input type="text" id="name" name="name" value="{{ salon.name }}" required>
+        </div>
+        <div class="form-group">
+          <label for="district">Dzielnica *</label>
+          <input type="text" id="district" name="district" value="{{ salon.district }}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Adres *</label>
+        <input type="text" id="address" name="address" value="{{ salon.address }}" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Telefon</label>
+          <input type="text" id="phone" name="phone" value="{{ salon.phone }}">
+        </div>
+        <div class="form-group">
+          <label for="price_range">Przedział cenowy</label>
+          <input type="text" id="price_range" name="price_range" value="{{ salon.price_range }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="website">Strona / Social media</label>
+        <input type="text" id="website" name="website" value="{{ salon.website }}">
+      </div>
+
+      <div class="form-group">
+        <label for="services">Usługi <span class="hint">(oddziel przecinkami)</span></label>
+        <input type="text" id="services" name="services" value="{{ salon.services }}">
+      </div>
+
+      <div class="form-group">
+        <label for="rating">Ocena</label>
+        <input type="text" id="rating" name="rating" value="{{ salon.rating }}" placeholder="np. 4.5">
+      </div>
+
+      <div class="form-actions">
+        <a href="/salons/{{ salon.id }}" class="btn-cancel">Anuluj</a>
+        <button type="submit" class="btn-save">Zapisz zmiany</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

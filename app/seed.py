@@ -1,7 +1,3 @@
-"""
-Wczytuje data/salons.csv do bazy SQLite.
-Uruchom raz przed startem aplikacji: python seed.py
-"""
 import csv
 from database import engine, SessionLocal
 import models

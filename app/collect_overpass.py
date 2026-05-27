@@ -1,10 +1,3 @@
-"""
-Warsaw Hair/Beauty Salon Data Collector v4
-- Overpass: bbox Warszawy
-- Yelp: filtr tylko Warszawa po mieście i współrzędnych
-- Dzielnice: geometrycznie (błyskawiczne, bez Nominatim)
-"""
-
 import csv
 import json
 import os
@@ -29,22 +22,13 @@ SESSION.headers.update({
     "Accept-Language": "pl-PL,pl;q=0.9",
 })
 
-# ---------------------------------------------------------------------------
-# Granice Warszawy (bounding box + filtr współrzędnych)
-# ---------------------------------------------------------------------------
-
-WARSAW_BBOX = (52.09, 20.85, 52.37, 21.27)   # (min_lat, min_lon, max_lat, max_lon)
+WARSAW_BBOX = (52.09, 20.85, 52.37, 21.27)
 WARSAW_NAMES = {"warsaw", "warszawa"}
 
 
 def in_warsaw_bbox(lat: float, lon: float) -> bool:
     min_lat, min_lon, max_lat, max_lon = WARSAW_BBOX
     return min_lat <= lat <= max_lat and min_lon <= lon <= max_lon
-
-
-# ---------------------------------------------------------------------------
-# Dzielnice Warszawy — geometryczne przypisanie (Voronoi po centroidach)
-# ---------------------------------------------------------------------------
 
 DISTRICTS = [
     ("Śródmieście",    52.2297, 21.0122),
@@ -86,11 +70,6 @@ def assign_district(lat: float, lon: float) -> str:
             best, best_d = name, d
     return best
 
-
-# ---------------------------------------------------------------------------
-# Data model
-# ---------------------------------------------------------------------------
-
 @dataclass
 class Salon:
     name:         str   = ""
@@ -105,10 +84,6 @@ class Salon:
     lat:          float = 0.0
     lon:          float = 0.0
     source:       str   = ""
-
-# ---------------------------------------------------------------------------
-# Part 1 — Overpass (GET, fallback serwery)
-# ---------------------------------------------------------------------------
 
 OVERPASS_SERVERS = [
     "https://overpass-api.de/api/interpreter",
@@ -172,7 +147,6 @@ def fetch_overpass() -> list[Salon]:
             lat = float(el.get("lat") or el.get("center", {}).get("lat") or 0)
             lon = float(el.get("lon") or el.get("center", {}).get("lon") or 0)
 
-            # Tylko Warszawa
             if not in_warsaw_bbox(lat, lon):
                 continue
 
@@ -195,11 +169,6 @@ def fetch_overpass() -> list[Salon]:
 
     log.error("Wszystkie serwery Overpass niedostępne")
     return []
-
-
-# ---------------------------------------------------------------------------
-# Part 2 — Yelp (tylko Warszawa)
-# ---------------------------------------------------------------------------
 
 YELP_SEARCH_URL = "https://api.yelp.com/v3/businesses/search"
 YELP_CATEGORIES = ["hair", "beautysvc", "barbers", "nailedsalons", "skincare", "makeupartists"]
@@ -226,7 +195,6 @@ def fetch_yelp() -> list[Salon]:
                 "limit":      50,
                 "offset":     offset,
                 "locale":     "pl_PL",
-                # Środek Warszawy + promień 15km (Yelp i tak może wychodzić poza)
                 "latitude":   52.2297,
                 "longitude":  21.0122,
                 "radius":     15000,
@@ -252,14 +220,12 @@ def fetch_yelp() -> list[Salon]:
                 lat = float(coords.get("latitude",  0) or 0)
                 lon = float(coords.get("longitude", 0) or 0)
 
-                # Twardy filtr: tylko w granicach Warszawy
                 if lat and lon and not in_warsaw_bbox(lat, lon):
                     skipped += 1
                     continue
 
                 loc  = b.get("location", {})
                 city = loc.get("city", "")
-                # Filtr po nazwie miasta jeśli brak koordynatów
                 if not lat and city.lower() not in WARSAW_NAMES:
                     skipped += 1
                     continue
@@ -301,11 +267,6 @@ def fetch_yelp() -> list[Salon]:
     log.info("  -> %d salonów z Yelp", len(salons))
     return salons
 
-
-# ---------------------------------------------------------------------------
-# Part 3 — Merge & deduplicate
-# ---------------------------------------------------------------------------
-
 def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", s.lower().strip())
 
@@ -336,11 +297,6 @@ def merge(overpass: list[Salon], yelp: list[Salon]) -> list[Salon]:
     log.info("Po merge & dedup: %d unikalnych salonów", len(result))
     return result
 
-
-# ---------------------------------------------------------------------------
-# Part 4 — Save
-# ---------------------------------------------------------------------------
-
 FIELDNAMES = [
     "name", "address", "district",
     "phone", "website",
@@ -363,11 +319,6 @@ def save(salons: list[Salon]) -> None:
         json.dump([asdict(s) for s in salons], f, ensure_ascii=False, indent=2)
     log.info("Zapisano JSON -> %s", OUTPUT_JSON)
 
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def main() -> None:
     osm_salons  = fetch_overpass()
     yelp_salons = fetch_yelp()
@@ -375,7 +326,6 @@ def main() -> None:
     all_salons = merge(osm_salons, yelp_salons)
     all_salons.sort(key=lambda s: (s.district.lower(), s.name.lower()))
 
-    # Tylko kompletne rekordy
     all_salons = [
         s for s in all_salons
         if s.name and s.address and s.district

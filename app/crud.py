@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 from models import Salon
 from schemas import SalonUpdate
 
@@ -21,6 +20,11 @@ def get_salons(
 
 def get_salon(db: Session, salon_id: int) -> Salon | None:
     return db.query(Salon).filter(Salon.id == salon_id).first()
+
+
+def get_all_districts(db: Session) -> list[str]:
+    rows = db.query(Salon.district).distinct().order_by(Salon.district).all()
+    return [r[0] for r in rows if r[0]]
 
 
 def update_salon(db: Session, salon_id: int, data: SalonUpdate) -> Salon | None:

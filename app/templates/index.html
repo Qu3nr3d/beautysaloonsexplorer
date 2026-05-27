@@ -1,10 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Salony Piękności Warszawa{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Warszawa &mdash; {{ total }} salonów</p>
+    <h1 class="hero-title">Znajdź swój<br><em>salon piękności</em></h1>
+  </div>
+</section>
+
+<section class="filters-section">
+  <form method="get" action="/" class="filters-form">
+    <div class="filter-group">
+      <label for="district">Dzielnica</label>
+      <select name="district" id="district">
+        <option value="">Wszystkie</option>
+        {% for d in districts %}
+        <option value="{{ d }}" {% if d == selected_district %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="service">Usługa</label>
+      <input type="text" name="service" id="service" placeholder="np. manicure, strzyżenie…" value="{{ selected_service }}">
+    </div>
+    <button type="submit" class="btn-filter">Szukaj</button>
+    {% if selected_district or selected_service %}
+    <a href="/" class="btn-clear">✕ Wyczyść</a>
+    {% endif %}
+  </form>
+</section>
+
+<section class="salons-section">
+  {% if salons %}
+  <div class="salons-grid">
+    {% for s in salons %}
+    <a href="/salons/{{ s.id }}" class="salon-card">
+      <div class="card-header">
+        <span class="card-district">{{ s.district }}</span>
+        {% if s.rating %}
+        <span class="card-rating">★ {{ s.rating }}</span>
+        {% endif %}
+      </div>
+      <h2 class="card-name">{{ s.name }}</h2>
+      <p class="card-address">{{ s.address }}</p>
+      <div class="card-footer">
+        {% if s.price_range %}
+        <span class="card-price">{{ s.price_range }}</span>
+        {% endif %}
+        {% if s.services %}
+        <span class="card-services">{{ s.services.split(',')[0] }}{% if s.services.split(',')|length > 1 %} +{{ s.services.split(',')|length - 1 }}{% endif %}</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>Brak salonów spełniających kryteria.</p>
+    <a href="/" class="btn-filter">Pokaż wszystkie</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

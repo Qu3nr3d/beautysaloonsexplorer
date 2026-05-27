@@ -1,3 +1,8 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+jinja2
+python-multipart
 requests
-pandas
 beautifulsoup4
+pydantic

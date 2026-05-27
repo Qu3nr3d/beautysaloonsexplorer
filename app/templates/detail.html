@@ -1,10 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{ salon.name }} – Warsaw Beauty{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<div class="detail-wrapper">
+  <div class="detail-nav">
+    <a href="/" class="back-link">← Wróć do listy</a>
+    <a href="/salons/{{ salon.id }}/edit" class="btn-edit">Edytuj</a>
+  </div>
+
+  <article class="detail-card">
+    <div class="detail-top">
+      <div class="detail-meta">
+        <span class="detail-district">{{ salon.district }}</span>
+        {% if salon.rating %}
+        <span class="detail-rating">★ {{ salon.rating }}
+          {% if salon.review_count %}<em>({{ salon.review_count }} opinii)</em>{% endif %}
+        </span>
+        {% endif %}
+      </div>
+      <h1 class="detail-name">{{ salon.name }}</h1>
+      <p class="detail-address">{{ salon.address }}</p>
+    </div>
+
+    <div class="detail-grid">
+      {% if salon.phone %}
+      <div class="detail-item">
+        <span class="detail-label">Telefon</span>
+        <a href="tel:{{ salon.phone }}" class="detail-value link">{{ salon.phone }}</a>
+      </div>
+      {% endif %}
+
+      {% if salon.website %}
+      <div class="detail-item">
+        <span class="detail-label">Strona / Social</span>
+        <a href="{{ salon.website }}" target="_blank" rel="noopener" class="detail-value link">
+          {{ salon.website | truncate(40) }}
+        </a>
+      </div>
+      {% endif %}
+
+      {% if salon.price_range %}
+      <div class="detail-item">
+        <span class="detail-label">Przedział cenowy</span>
+        <span class="detail-value">{{ salon.price_range }}</span>
+      </div>
+      {% endif %}
+
+      {% if salon.services %}
+      <div class="detail-item detail-item--full">
+        <span class="detail-label">Usługi</span>
+        <div class="services-list">
+          {% for svc in salon.services.split(',') %}
+          <span class="service-tag">{{ svc.strip() }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if salon.lat and salon.lon %}
+      <div class="detail-item detail-item--full">
+        <span class="detail-label">Mapa</span>
+        <a href="https://www.openstreetmap.org/?mlat={{ salon.lat }}&mlon={{ salon.lon }}&zoom=17"
+           target="_blank" class="detail-value link">
+          Otwórz w OpenStreetMap ↗
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </article>
+</div>
+{% endblock %}

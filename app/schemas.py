@@ -22,7 +22,6 @@ class SalonCreate(SalonBase):
 
 
 class SalonUpdate(BaseModel):
-    """Wszystkie pola opcjonalne — PATCH semantyka."""
     name:         Optional[str]   = None
     address:      Optional[str]   = None
     district:     Optional[str]   = None
@@ -44,7 +43,6 @@ class SalonResponse(SalonBase):
 
 
 class SalonListItem(BaseModel):
-    """Skrócony widok dla listingu."""
     id:          int
     name:        str
     district:    str
