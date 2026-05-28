@@ -4,23 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd4a554c-b674-45d6-a416-eab6e2b21a38" name="Changes" comment="added gitignore and readme files">
-      <change afterPath="$PROJECT_DIR$/app/cleanup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="dd4a554c-b674-45d6-a416-eab6e2b21a38" name="Changes" comment="completed project">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collect_overpass.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collect_overpass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/crud.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/crud.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/schemas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/seed.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/seed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/salons.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/salons.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_main.http" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +107,11 @@
       <option name="presentableId" value="Default" />
       <updated>1779732019565</updated>
       <workItem from="1779732020619" duration="9662000" />
-      <workItem from="1779909524690" duration="3392000" />
+      <workItem from="1779909524690" duration="3860000" />
+      <workItem from="1779917870892" duration="59000" />
+      <workItem from="1779921088456" duration="1487000" />
+      <workItem from="1779991789973" duration="16000" />
+      <workItem from="1779992021566" duration="515000" />
     </task>
     <task id="LOCAL-00001" summary="taking info from yelp and overpass api and starting a fastapi localhost">
       <option name="closed" value="true" />
@@ -146,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779737971246</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="completed project">
+      <option name="closed" value="true" />
+      <created>1779913186031</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779913186031</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +165,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="taking info from yelp and overpass api and starting a fastapi localhost" />
     <MESSAGE value="added gitignore and readme files" />
-    <option name="LAST_COMMIT_MESSAGE" value="added gitignore and readme files" />
+    <MESSAGE value="completed project" />
+    <option name="LAST_COMMIT_MESSAGE" value="completed project" />
   </component>
 </project>

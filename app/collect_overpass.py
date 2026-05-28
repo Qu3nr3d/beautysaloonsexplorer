@@ -25,11 +25,6 @@ SESSION.headers.update({
 WARSAW_BBOX = (52.09, 20.85, 52.37, 21.27)
 WARSAW_NAMES = {"warsaw", "warszawa"}
 
-
-def in_warsaw_bbox(lat: float, lon: float) -> bool:
-    min_lat, min_lon, max_lat, max_lon = WARSAW_BBOX
-    return min_lat <= lat <= max_lat and min_lon <= lon <= max_lon
-
 DISTRICTS = [
     ("Śródmieście",    52.2297, 21.0122),
     ("Mokotów",        52.1910, 21.0230),
@@ -51,40 +46,6 @@ DISTRICTS = [
     ("Wesoła",         52.2500, 21.2200),
 ]
 
-
-def _dist_km(lat1, lon1, lat2, lon2) -> float:
-    R = 6371
-    d_lat = radians(lat2 - lat1)
-    d_lon = radians(lon2 - lon1)
-    a = sin(d_lat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(d_lon/2)**2
-    return R * 2 * atan2(sqrt(a), sqrt(1 - a))
-
-
-def assign_district(lat: float, lon: float) -> str:
-    if not lat or not lon:
-        return ""
-    best, best_d = "", 999.0
-    for name, dlat, dlon in DISTRICTS:
-        d = _dist_km(lat, lon, dlat, dlon)
-        if d < best_d:
-            best, best_d = name, d
-    return best
-
-@dataclass
-class Salon:
-    name:         str   = ""
-    address:      str   = ""
-    district:     str   = ""
-    phone:        str   = ""
-    website:      str   = ""
-    services:     str   = ""
-    price_range:  str   = ""
-    rating:       str   = ""
-    review_count: str   = ""
-    lat:          float = 0.0
-    lon:          float = 0.0
-    source:       str   = ""
-
 OVERPASS_SERVERS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
@@ -103,6 +64,54 @@ out center tags;
 
 DISTRICT_TAGS = ["addr:suburb", "addr:city_district", "is_in:suburb", "addr:quarter"]
 
+YELP_SEARCH_URL = "https://api.yelp.com/v3/businesses/search"
+YELP_CATEGORIES = ["hair", "beautysvc", "barbers", "nailedsalons", "skincare", "makeupartists"]
+YELP_PRICE_MAP  = {"$": "do 50 PLN", "$$": "50–150 PLN", "$$$": "150–300 PLN", "$$$$": "300+ PLN"}
+
+FIELDNAMES = [
+    "name", "address", "district",
+    "phone", "website",
+    "services", "price_range",
+    "rating", "review_count",
+    "lat", "lon", "source",
+]
+
+@dataclass
+class Salon:
+    name:         str   = ""
+    address:      str   = ""
+    district:     str   = ""
+    phone:        str   = ""
+    website:      str   = ""
+    services:     str   = ""
+    price_range:  str   = ""
+    rating:       str   = ""
+    review_count: str   = ""
+    lat:          float = 0.0
+    lon:          float = 0.0
+    source:       str   = ""
+
+def in_warsaw_bbox(lat: float, lon: float) -> bool:
+    min_lat, min_lon, max_lat, max_lon = WARSAW_BBOX
+    return min_lat <= lat <= max_lat and min_lon <= lon <= max_lon
+
+def _dist_km(lat1, lon1, lat2, lon2) -> float:
+    R = 6371
+    d_lat = radians(lat2 - lat1)
+    d_lon = radians(lon2 - lon1)
+    a = sin(d_lat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(d_lon/2)**2
+    return R * 2 * atan2(sqrt(a), sqrt(1 - a))
+
+
+def assign_district(lat: float, lon: float) -> str:
+    if not lat or not lon:
+        return ""
+    best, best_d = "", 999.0
+    for name, dlat, dlon in DISTRICTS:
+        d = _dist_km(lat, lon, dlat, dlon)
+        if d < best_d:
+            best, best_d = name, d
+    return best
 
 def _extract_district_tag(tags: dict) -> str:
     for key in DISTRICT_TAGS:
@@ -169,11 +178,6 @@ def fetch_overpass() -> list[Salon]:
 
     log.error("Wszystkie serwery Overpass niedostępne")
     return []
-
-YELP_SEARCH_URL = "https://api.yelp.com/v3/businesses/search"
-YELP_CATEGORIES = ["hair", "beautysvc", "barbers", "nailedsalons", "skincare", "makeupartists"]
-YELP_PRICE_MAP  = {"$": "do 50 PLN", "$$": "50–150 PLN", "$$$": "150–300 PLN", "$$$$": "300+ PLN"}
-
 
 def fetch_yelp() -> list[Salon]:
     if not YELP_API_KEY:
@@ -297,15 +301,6 @@ def merge(overpass: list[Salon], yelp: list[Salon]) -> list[Salon]:
     log.info("Po merge & dedup: %d unikalnych salonów", len(result))
     return result
 
-FIELDNAMES = [
-    "name", "address", "district",
-    "phone", "website",
-    "services", "price_range",
-    "rating", "review_count",
-    "lat", "lon", "source",
-]
-
-
 def save(salons: list[Salon]) -> None:
     os.makedirs("data", exist_ok=True)
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
@@ -344,7 +339,6 @@ def main() -> None:
     print(f"  Z przedziałem cenowym      : {sum(1 for s in all_salons if s.price_range)}")
     print(f"  Z dzielnicą                : {sum(1 for s in all_salons if s.district)}")
     print(f"{'='*50}\n")
-
 
 if __name__ == "__main__":
     main()
