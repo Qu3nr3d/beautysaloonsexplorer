@@ -32,7 +32,7 @@ Load the database and start the server:
 ```bash
 cd app
 python seed.py
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
 ```
 
 App available at [http://127.0.0.1:8000](http://127.0.0.1:8000)
