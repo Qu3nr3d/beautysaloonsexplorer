@@ -10,7 +10,7 @@ A database of hair salons and beauty parlors in Warsaw with a web interface and 
 ## How to Run the Application
 
 ```bash
-git clone https://github.com/Qu3nr3d/beautysalooons
+git clone https://github.com/Qu3nr3d/beautysaloonsexplorer beautysalooons
 cd beautysalooons
 
 python -m venv .venv
