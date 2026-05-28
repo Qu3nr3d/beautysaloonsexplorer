@@ -83,7 +83,7 @@ beautysaloonsexplorer/
 │   │   ├── index.html
 │   │   ├── detail.html
 │   │   └── edit.html
-│   ├── collect_v4.py     # data collection from Overpass & Yelp
+│   ├── collect_overpass.py     # data collection from Overpass & Yelp
 │   ├── cleanup.py        # remove invalid records
 │   ├── seed.py           # load CSV into database
 │   ├── main.py           # FastAPI routes
